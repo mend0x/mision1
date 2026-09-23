@@ -1,96 +1,52 @@
 # AimSimulator
 
-M1 · El Despertar del DOM — Web Development I, U-tad.
+**M1 · El Despertar del DOM — Web Development I, U-tad.**
 
-Un minijuego de puntería hecho con HTML, CSS y JavaScript puro. El objetivo cambia de posición cada vez que lo aciertas. Completa diez aciertos intentando fallar lo menos posible.
+Minijuego de puntería desarrollado con HTML, CSS y JavaScript puro, sin frameworks ni librerías. Cada ronda tiene diez disparos: el objetivo es conseguir la mayor precisión posible y, en caso de empate, el menor tiempo.
 
 ## Cómo probarlo
 
 1. Descarga los archivos en una misma carpeta.
 2. Abre `index.html` en el navegador o con Live Server en VS Code.
-3. Pulsa **Empezar ronda** y haz clic en el círculo.
-4. Los clics en el fondo durante la ronda cuentan como fallos.
-5. Al llegar a diez aciertos, se guarda el resultado en el historial de la página.
+3. Pulsa **Empezar ronda** para iniciar el cronómetro y mostrar la diana.
+4. Haz clic en la diana para sumar un acierto. Los clics en el fondo cuentan como fallos.
+5. Al completar **diez disparos entre aciertos y fallos**, termina la ronda y aparece su resultado en la clasificación.
 
-**Reiniciar ronda** descarta la ronda en curso. El historial conserva solamente las rondas completadas y se borra al recargar. La tecla **N** activa o desactiva el modo oscuro. Los botones también funcionan con Tab y Enter o Espacio; la puntuación no distingue entre ratón y teclado.
+La diana cambia de posición cada vez que aciertas. **Reiniciar ronda** descarta la ronda en curso sin guardar su resultado. La tecla **N** activa o desactiva el modo oscuro.
 
-La precisión se calcula como `aciertos / (aciertos + fallos) * 100`, redondeada al entero más cercano. Antes del primer disparo se muestra 0% para evitar dividir entre cero.
+La clasificación ordena las rondas por mayor precisión y, en caso de empate, por menor tiempo. Los resultados son locales y se borran al recargar la página.
+
+La precisión se calcula como `aciertos / (aciertos + fallos) * 100`. Por ejemplo, siete aciertos y tres fallos equivalen al 70%.
 
 ## Archivos
 
 | Archivo | Responsabilidad |
 | --- | --- |
-| `index.html` | Estructura, botones, marcador y lista de resultados. Carga el script con `defer`. |
-| `style.css` | Diseño adaptable, objetivo, cursor y modo oscuro. |
-| `script.js` | Estado de la ronda, eventos y cambios en el DOM. |
-| `README.md` | Uso, explicación de decisiones y declaración de IA. |
-
-No requiere instalaciones, frameworks, librerías ni servicios externos.
-
-## Relación con la rúbrica
-
-| Criterio | Aplicación |
-| --- | --- |
-| DOM · 20 puntos | `querySelector` selecciona elementos, `textContent` modifica el marcador y `createElement` + `appendChild` crean resultados. |
-| Eventos · 15 puntos | `addEventListener` para botones, delegación de clics en la caja, `keydown` y `resize`. Sin eventos inline. |
-| Fundamentos JS · 15 puntos | `const`, `let`, números, booleanos, funciones, ámbito local, condicionales, comparación estricta y template literals. |
-| Calidad · 10 puntos | Archivos separados y funciones para mover, calcular, actualizar, comenzar y terminar. |
-| Originalidad · 10 puntos | Se desarrolla la idea inicial de AimSimulator con rondas, precisión e historial. |
-| Bonus | `keydown` y `classList.toggle("oscuro")` activan el modo oscuro con N. |
-
-Esta tabla localiza las implementaciones; no garantiza una puntuación. Las comprobaciones del repositorio y la defensa oral también forman parte de la evaluación.
+| `index.html` | Estructura, marcador, botones y clasificación. |
+| `style.css` | Presentación, área de juego de 600 px de altura y modo oscuro. |
+| `script.js` | Movimiento de la diana, eventos, puntuación, cronómetro y clasificación. |
+| `README.md` | Instrucciones, uso de IA y decisiones de implementación. |
 
 ## Uso de IA
 
-Partí de una versión propia de AimSimulator con una diana móvil y un contador. Utilicé ChatGPT como apoyo para comprender mejor el movimiento del botón dentro del div: cómo calcular el espacio disponible, restar las dimensiones del botón y asignar posiciones aleatorias mediante `left` y `top`.
+Partí de una versión propia de AimSimulator que ya incluía una diana móvil, un contador y el cálculo de posiciones aleatorias. Esa fue la base que aporté antes de esta revisión con IA.
 
-También recibí propuestas de código para ampliar, simplificar y comentar los archivos de cara a comprenderlos y defenderlos. Fui indicando los cambios que quería en el diseño y el funcionamiento.
+Utilicé **ChatGPT (Codex)** como apoyo para comprender mejor el movimiento del botón dentro del div: calcular el espacio disponible, restar las dimensiones del botón y asignar posiciones mediante `left` y `top`.
 
-La idea inicial y las decisiones sobre cómo quería desarrollar el juego partieron de mí; la IA me ayudó con explicaciones y propuestas de implementación.
+También recibí propuestas de código para organizar los eventos y añadir el cronómetro, la clasificación y el modo oscuro. Pedí simplificar los estilos y comentar el código para poder entenderlo y defenderlo. Este README también se redactó con ayuda de IA.
 
-Probé el juego en el navegador, comprobando el movimiento de la diana dentro del contenedor, el recuento de aciertos y fallos, el cronómetro, el reinicio y el orden de la clasificación.
+La idea inicial y las preferencias de diseño y funcionamiento partieron de mí, incluida la elección de una altura de 600 px para el área de juego.
 
-## Pruebas
+Fragmentos de prompts reales utilizados:
 
-El asistente comprobó la sintaxis y la lógica mediante una simulación del DOM: puntuación, fin de ronda, reinicio, historial, tecla N y coordenadas con medidas simuladas. Estas pruebas pasaron. La comprobación visual en un navegador real quedó pendiente porque no se pudo descargar el navegador de pruebas.
+> Dame los nuevos cambios sin añadir excesivo código, solo con las implementaciones de la teoria
 
-Casos para reproducir en el navegador:
+> Tambien vas a añadir un cronometro que temporice la ronda para que tenga sentido la leaderboard de rondas
 
-- Clic en la caja antes de empezar: no cambia el marcador.
-- Una ronda con 10 aciertos y 1 fallo: muestra 91% y crea un único resultado.
-- Clic después del final: no modifica el resultado.
-- Reinicio a mitad de ronda: vuelve a cero sin guardar una ronda incompleta.
-- Segunda ronda sin fallos: muestra 100% y conserva el resultado anterior.
-- Tecla N: cambia de tema y permite volver al tema inicial.
-- Ventana estrecha o cambio de tamaño: el objetivo queda dentro del área de juego.
+Verifiqué el resultado jugando en el navegador y comprobando el movimiento de la diana dentro del contenedor, el recuento de aciertos y fallos, el cronómetro, el reinicio y el orden de la clasificación.
 
 ## Autopsia
 
-Estas son dos decisiones de la propuesta asistida que el autor debe revisar antes de entregar:
+1. **Diez disparos por ronda y precisión como criterio principal.** La versión inicial terminaba al alcanzar diez aciertos, por lo que todas las rondas acababan mostrando 10/10. Con diez disparos totales, los fallos afectan al resultado final. Se descartó ordenar únicamente por tiempo porque una ronda de fallos rápidos podría quedar por delante de una ronda precisa. El tiempo se utiliza como desempate.
 
-1. **Rondas de diez aciertos, sin temporizador.** Permiten terminar una partida y comparar la precisión con pocas variables. Se descartó una cuenta atrás porque añadiría gestión de temporizadores y reinicios que no es necesaria para esta idea. Como contrapartida, no se mide velocidad y una ronda puede durar indefinidamente.
-2. **Un listener en la caja para aciertos y fallos.** El clic del botón sube al contenedor; `event.target === botonAim` permite distinguirlo de un clic en el fondo. Se descartaron listeners separados en botón y caja, que exigirían filtrar la propagación para no contar también un fallo al acertar. Esta comparación es suficiente porque el botón no contiene otros elementos HTML: si se añadiera un icono como hijo, habría que adaptar la detección, por ejemplo con `closest`.
-
-## Conceptos para la defensa
-
-- `const` impide reasignar la variable; no impide modificar el elemento DOM al que apunta.
-- `let` permite cambiar los aciertos, los fallos y el estado de la ronda.
-- `prepararJuego()` mantiene esas variables dentro de una función; los listeners conservan acceso a ellas mediante el ámbito léxico.
-- `defer` ejecuta el script cuando el HTML ya se ha parseado.
-- `textContent` escribe texto sin interpretarlo como HTML.
-- `clientWidth` mide el ancho interior de la caja y `offsetWidth` el ancho del botón, incluido su borde. Su diferencia limita las coordenadas.
-- El botón se muestra antes de medirlo: un elemento oculto no tiene el tamaño visible necesario para ese cálculo.
-- `enPartida` bloquea la puntuación antes de empezar y después de terminar.
-- El historial se construye con nodos nuevos; no se necesita un array porque no se recalculan ni reutilizan sus resultados.
-
-## Antes de entregar
-
-- [ ] Revisar el código y completar la declaración personal de Uso de IA.
-- [ ] Reproducir las pruebas y poder explicar cada línea.
-- [ ] Revisar y personalizar las dos decisiones de la Autopsia.
-- [ ] Publicar el repositorio como público y comprobarlo en incógnito.
-- [ ] Tener al menos cinco commits reales de avances y revisiones dentro de la carpeta entregada.
-- [ ] Mantener el repositorio limpio, sin dependencias ni archivos temporales.
-- [ ] Entregar la URL en la Arena seleccionando M1 · El Despertar del DOM.
-
-Para continuar por fases: revisar estructura; entender y probar eventos; revisar rondas e historial; ajustar el diseño y el modo oscuro; completar documentación y pruebas. Guarda un commit cuando completes un cambio real. No reconstruyas un historial ficticio ni hagas commits vacíos para alcanzar el mínimo.
+2. **Medir el tiempo mediante la diferencia entre dos instantes.** La duración se calcula con `Date.now() - inicioRonda`; `setInterval()` solo actualiza el cronómetro visible. Se descartó sumar una cantidad fija en cada ejecución del intervalo porque el navegador puede retrasarla. Al terminar o reiniciar se utiliza `clearInterval()` para detener el intervalo anterior. Es una solución sencilla para este ejercicio, aunque depende del reloj del sistema.
