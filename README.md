@@ -35,6 +35,10 @@ Utilicé **ChatGPT (Codex)** como apoyo para comprender mejor el movimiento del 
 
 También recibí propuestas de código para organizar los eventos y añadir el cronómetro, la clasificación y el modo oscuro. Pedí simplificar los estilos y comentar el código para poder entenderlo y defenderlo. Este README también se redactó con ayuda de IA.
 
+Partí de un código propio que seleccionaba el botón, el contenedor y el contador mediante `getElementById`. Al pulsar la diana, aumentaba el contador y calculaba una nueva posición con `Math.random()`, restando las dimensiones del botón a las del contenedor para mantenerlo dentro.
+
+A partir de esa base, fui desarrollando el juego con ayuda de ChatGPT: reorganizamos los eventos y añadimos rondas, fallos, precisión, cronómetro, reinicio y clasificación. También pedí simplificar el CSS, fijar el área de juego en 600 px de altura y explicar el código mediante comentarios para preparar la defensa.
+
 La idea inicial y las preferencias de diseño y funcionamiento partieron de mí, incluida la elección de una altura de 600 px para el área de juego.
 
 Fragmentos de prompts reales utilizados:
