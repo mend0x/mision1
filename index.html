@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Permite adaptar la página al ancho del dispositivo. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AimSimulator</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- defer espera a que el HTML esté analizado antes de ejecutar el JS. -->
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <!-- main contiene el contenido principal de la página. -->
+    <main>
+        <header>
+            <h1>AimSimulator</h1>
+            <p>Tienes 10 disparos. Consigue la mayor precisión posible.</p>
+        </header>
+
+        <!-- JavaScript actualizará los elementos que tienen un id. -->
+        <section class="marcador" aria-label="Marcador de la ronda">
+            <p>Aciertos: <strong id="aciertos">0 / 10</strong></p>
+            <p>Fallos: <strong id="fallos">0</strong></p>
+            <p>Precisión: <strong id="precision">0%</strong></p>
+            <p>Tiempo: <strong id="tiempo">0.00 s</strong></p>
+        </section>
+
+        <!-- El evento se conecta desde JS, sin onclick en el HTML. -->
+        <button id="iniciar" type="button">Empezar ronda</button>
+
+        <!-- role="status" permite anunciar los mensajes a lectores de pantalla. -->
+        <p id="mensaje" role="status">Pulsa el botón para comenzar.</p>
+
+        <!-- Contenedor dentro del que se mueve la diana. -->
+        <div id="CajaEspacio">
+            <!-- hidden mantiene la diana oculta hasta empezar. -->
+            <button
+                id="botonAim"
+                type="button"
+                aria-label="Acertar a la diana"
+                hidden>
+            </button>
+        </div>
+
+        <p>El fondo cuenta como fallo. Pulsa N para cambiar de tema.</p>
+
+        <section aria-labelledby="tituloClasificacion">
+            <h2 id="tituloClasificacion">Clasificación de rondas</h2>
+            <p>Menor tiempo primero. En caso de empate, menos fallos.</p>
+
+            <!-- JavaScript creará un li por cada ronda completada. -->
+            <ol id="clasificacion"></ol>
+        </section>
+
+        <footer>
+            Los resultados se borran al recargar la página.
+        </footer>
+
+        <noscript>Necesitas activar JavaScript para jugar.</noscript>
+    </main>
+</body>
+</html>
