@@ -102,32 +102,32 @@ function prepararJuego() {
     }
 
     function actualizarClasificacion() {
-        // sort ordena el array comparando dos resultados cada vez.
-        // Un resultado negativo coloca a antes que b.
+        // terminarRonda() acaba de añadir la nueva ronda al final del array.
+        const nuevaRonda = rondas[rondas.length - 1];
+
+        // Ordenamos los datos: mayor precisión y, si empatan, menor tiempo.
         rondas.sort((a, b) => {
-            // Primero aparece la ronda con mayor precisión.
             if (a.precision !== b.precision) {
                 return b.precision - a.precision;
             }
 
-            // Si tienen la misma precisión, gana el menor tiempo.
             return a.tiempo - b.tiempo;
         });
 
-        // Limpiamos la lista antes de dibujar los resultados ya ordenados.
-        // Los datos siguen guardados en el array rondas.
-        clasificacion.textContent = "";
+        // Buscamos en qué posición ha quedado la nueva ronda.
+        const posicion = rondas.indexOf(nuevaRonda);
 
-        // Recorremos los objetos del array y creamos un elemento por resultado.
-        for (const ronda of rondas) {
-            const elemento = document.createElement("li");
+        // Creamos únicamente el elemento del resultado nuevo.
+        const elemento = document.createElement("li");
 
-            elemento.textContent =
-                `Ronda ${ronda.numero}: ${mostrarTiempo(ronda.tiempo)} · ` +
-                `${ronda.fallos} fallos · ${ronda.precision}% de precisión`;
+        elemento.textContent =
+            `Ronda ${nuevaRonda.numero}: ${mostrarTiempo(nuevaRonda.tiempo)} · ` +
+            `${nuevaRonda.fallos} fallos · ${nuevaRonda.precision}% de precisión`;
 
-            clasificacion.appendChild(elemento);
-        }
+        // Si no hay un elemento en esa posición, usamos null para añadir al final.
+        const siguiente = clasificacion.children[posicion] ?? null;
+
+        clasificacion.insertBefore(elemento, siguiente);
     }
 
     function terminarRonda() {
