@@ -101,32 +101,34 @@ function prepararJuego() {
         cronometro = setInterval(actualizarCronometro, intervaloCronometro);
     }
 
-    function actualizarClasificacion() {
-        // terminarRonda() acaba de añadir la nueva ronda al final del array.
-        const nuevaRonda = rondas[rondas.length - 1];
+    function actualizarClasificacion(nuevaRonda) {
+        let posicion = 0;
 
-        // Ordenamos los datos: mayor precisión y, si empatan, menor tiempo.
-        rondas.sort((a, b) => {
-            if (a.precision !== b.precision) {
-                return b.precision - a.precision;
+        // Buscamos el primer resultado al que supera la nueva ronda.
+        for (const ronda of rondas) {
+            const mayorPrecision = nuevaRonda.precision > ronda.precision;
+
+            const empateConMenorTiempo =
+                nuevaRonda.precision === ronda.precision &&
+                nuevaRonda.tiempo < ronda.tiempo;
+
+            if (mayorPrecision || empateConMenorTiempo) {
+                break;
             }
 
-            return a.tiempo - b.tiempo;
-        });
+            posicion++;
+        }
 
-        // Buscamos en qué posición ha quedado la nueva ronda.
-        const posicion = rondas.indexOf(nuevaRonda);
+        // Insertamos sin eliminar ninguna ronda anterior.
+        rondas.splice(posicion, 0, nuevaRonda);
 
-        // Creamos únicamente el elemento del resultado nuevo.
         const elemento = document.createElement("li");
 
         elemento.textContent =
             `Ronda ${nuevaRonda.numero}: ${mostrarTiempo(nuevaRonda.tiempo)} · ` +
             `${nuevaRonda.fallos} fallos · ${nuevaRonda.precision}% de precisión`;
 
-        // Si no hay un elemento en esa posición, usamos null para añadir al final.
         const siguiente = clasificacion.children[posicion] ?? null;
-
         clasificacion.insertBefore(elemento, siguiente);
     }
 
@@ -142,15 +144,16 @@ function prepararJuego() {
         iniciar.textContent = "Otra ronda";
         mensaje.textContent = `Ronda completada en ${mostrarTiempo(tiempoFinal)}.`;
 
-        // push añade al array un objeto con los datos de esta ronda.
-        rondas.push({
+        // Creamos el resultado y lo pasamos a la clasificación.
+        const nuevaRonda = {
             numero: rondas.length + 1,
             tiempo: tiempoFinal,
             fallos: fallos,
             precision: calcularPrecision()
-        });
+        };
 
-        actualizarClasificacion();
+        actualizarClasificacion(nuevaRonda);
+
     }
 
     // Pasamos la función sin paréntesis para que se ejecute al hacer clic.
