@@ -2,7 +2,6 @@
 
 // Agrupamos el juego en una función para mantener su estado en un ámbito local.
 function prepararJuego() {
-
     // Seleccionamos una sola vez los elementos que vamos a utilizar.
     // const evita reasignar estas referencias, pero permite modificar los elementos.
     const caja = document.querySelector("#CajaEspacio");
@@ -18,6 +17,9 @@ function prepararJuego() {
     // La meta permanece igual durante todas las rondas.
     const meta = 10;
 
+    // Tiempo entre actualizaciones del cronómetro visible, en milisegundos.
+    const intervaloCronometro = 50;
+
     // El array almacena un objeto por cada ronda completada.
     // Aunque sea const, podemos añadir elementos y ordenarlos.
     const rondas = [];
@@ -31,12 +33,10 @@ function prepararJuego() {
 
     function calcularPrecision() {
         const disparos = aciertos + fallos;
-
         // Antes del primer disparo evitamos dividir entre cero.
         if (disparos === 0) {
             return 0;
         }
-
         // Math.round redondea el porcentaje al entero más cercano.
         return Math.round(aciertos / disparos * 100);
     }
@@ -98,7 +98,7 @@ function prepararJuego() {
 
         // Ejecuta la función cada 50 ms para refrescar el tiempo visible.
         // Guardamos su identificador para poder detenerlo.
-        cronometro = setInterval(actualizarCronometro, 50);
+        cronometro = setInterval(actualizarCronometro, intervaloCronometro);
     }
 
     function actualizarClasificacion() {
