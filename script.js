@@ -13,6 +13,7 @@ function prepararJuego() {
     const salidaPrecision = document.querySelector("#precision");
     const salidaTiempo = document.querySelector("#tiempo");
     const clasificacion = document.querySelector("#clasificacion");
+    const instrucciones = document.querySelector("#instrucciones");
 
     // La meta permanece igual durante todas las rondas.
     const meta = 10;
@@ -91,7 +92,7 @@ function prepararJuego() {
         actualizarMarcador();
 
         iniciar.textContent = "Reiniciar ronda";
-        mensaje.textContent = "Tienes 10 disparos. Apunta bien: cada clic cuenta.";
+        mensaje.textContent = `Tienes ${meta} disparos. Apunta bien: cada clic cuenta.`;
         salidaTiempo.textContent = "0.00 s";
 
         inicioRonda = Date.now();
@@ -155,6 +156,12 @@ function prepararJuego() {
         actualizarClasificacion(nuevaRonda);
 
     }
+
+    // La configuración también determina los textos iniciales de la interfaz.
+    instrucciones.textContent =
+        `Tienes ${meta} disparos. Consigue la mayor precisión posible.`;
+
+    actualizarMarcador();
 
     // Pasamos la función sin paréntesis para que se ejecute al hacer clic.
     iniciar.addEventListener("click", comenzarRonda);
