@@ -32,6 +32,11 @@ function prepararJuego() {
     let inicioRonda = 0;
     let cronometro = null;
 
+    // Guardamos proporciones del recorrido disponible, no píxeles.
+    // Así podemos mantener la posición relativa al redimensionar.
+    let proporcionX = 0;
+    let proporcionY = 0;
+
     function calcularPrecision() {
         const disparos = aciertos + fallos;
         // Antes del primer disparo evitamos dividir entre cero.
@@ -66,15 +71,40 @@ function prepararJuego() {
         salidaTiempo.textContent = mostrarTiempo(obtenerTiempo());
     }
 
-    function moverDiana() {
-        // Restamos el tamaño de la diana para que quepa dentro de la caja.
-        const maxX = caja.clientWidth - diana.offsetWidth;
-        const maxY = caja.clientHeight - diana.offsetHeight;
+    function posicionarDiana() {
+        const anchoCaja = caja.clientWidth;
+        const altoCaja = caja.clientHeight;
+        const anchoDiana = diana.offsetWidth;
+        const altoDiana = diana.offsetHeight;
 
+        // Si algún elemento no tiene tamaño, conservamos las proporciones
+        // y esperamos a una próxima llamada con medidas válidas.
+        if (
+            anchoCaja <= 0 || altoCaja <= 0 ||
+            anchoDiana <= 0 || altoDiana <= 0
+        ) {
+            return;
+        }
+
+        // Restamos el tamaño de la diana para que quepa dentro de la caja.
+        // Math.max evita coordenadas negativas si la caja es más pequeña.
+        // En ese caso se coloca en el origen, aunque no puede caber entera.
+        const maxX = Math.max(0, anchoCaja - anchoDiana);
+        const maxY = Math.max(0, altoCaja - altoDiana);
+
+        // Convertimos las proporciones guardadas en coordenadas en píxeles.
+        diana.style.left = `${proporcionX * maxX}px`;
+        diana.style.top = `${proporcionY * maxY}px`;
+    }
+
+    function moverDiana() {
         // Math.random() genera un número desde 0 hasta menos de 1.
-        // Al multiplicarlo obtenemos una posición dentro del espacio disponible.
-        diana.style.left = `${Math.random() * maxX}px`;
-        diana.style.top = `${Math.random() * maxY}px`;
+        // Al multiplicarlo por el recorrido disponible en posicionarDiana(),
+        // obtenemos una posición dentro del espacio disponible.
+        proporcionX = Math.random();
+        proporcionY = Math.random();
+
+        posicionarDiana();
     }
 
     function comenzarRonda() {
@@ -154,7 +184,31 @@ function prepararJuego() {
         };
 
         actualizarClasificacion(nuevaRonda);
+    }
 
+    function registrarDisparo(event) {
+        // Ignoramos los clics antes de empezar y después de terminar.
+        if (!enPartida) {
+            return;
+        }
+
+        // target identifica el elemento donde se originó el clic.
+        // contains reconoce tanto la propia diana como sus posibles hijos.
+        const esAcierto = diana.contains(event.target);
+
+        if (esAcierto) {
+            aciertos++;
+        } else {
+            fallos++;
+        }
+
+        actualizarMarcador();
+
+        if (aciertos + fallos === meta) {
+            terminarRonda();
+        } else if (esAcierto) {
+            moverDiana();
+        }
     }
 
     // La configuración también determina los textos iniciales de la interfaz.
@@ -167,28 +221,7 @@ function prepararJuego() {
     iniciar.addEventListener("click", comenzarRonda);
 
     // Delegación: escuchamos en la caja los clics del fondo y de la diana.
-    caja.addEventListener("click", (event) => {
-
-        // Ignoramos los clics antes de empezar y después de terminar.
-        if (!enPartida) {
-            return;
-        }
-
-        // target identifica el elemento donde se originó el clic.
-        if (event.target === diana) {
-            aciertos++;
-        } else {
-            fallos++;
-        }
-
-        actualizarMarcador();
-
-        if (aciertos + fallos === meta) {
-            terminarRonda();
-        } else if (event.target === diana) {
-            moverDiana();
-        }
-    });
+    caja.addEventListener("click", registrarDisparo);
 
     // Bonus de la misión: cambiar de tema mediante una tecla.
     document.addEventListener("keydown", (event) => {
@@ -198,10 +231,12 @@ function prepararJuego() {
         }
     });
 
-    // Si cambia la anchura de la ventana, recolocamos la diana dentro de la caja.
+    // Si cambia el tamaño de la ventana, conservamos la posición proporcional.
+    // El listener permanece conectado para las siguientes rondas,
+    // pero solo actualiza la diana mientras hay una partida activa.
     window.addEventListener("resize", () => {
         if (enPartida) {
-            moverDiana();
+            posicionarDiana();
         }
     });
 }
