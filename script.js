@@ -81,17 +81,15 @@ function prepararJuego() {
         );
         const tamano = tamanosDiana[indiceNivel];
 
-        // Cambiamos ambos lados para mantener circular la diana.
-        diana.style.width = `${tamano}px`;
-        diana.style.height = `${tamano}px`;
+        // Una variable CSS controla ambos lados para mantener circular la diana.
+        diana.style.setProperty("--tamano-diana", `${tamano}px`);
         salidaNivel.textContent = `${indiceNivel + 1} / ${tamanosDiana.length}`;
     }
 
     function moverDiana() {
         // Restamos el tamaño de la diana para que quepa dentro de la caja.
-        // Releemos las medidas porque cambian con el nivel y el tamaño de ventana.
-        // Math.max evita posiciones negativas si la caja es menor que la diana.
-        // En ese caso queda en el origen de ese eje, aunque no quepa entera.
+        // Math.max evita coordenadas negativas si la caja es demasiado pequeña.
+        // En ese caso se usa el origen del eje, aunque la diana no quepa entera.
         const maxX = Math.max(0, caja.clientWidth - diana.offsetWidth);
         const maxY = Math.max(0, caja.clientHeight - diana.offsetHeight);
 
@@ -209,7 +207,7 @@ function prepararJuego() {
     }
 
     function ajustarDianaAlRedimensionar() {
-        // Si cambia la anchura de la ventana, recolocamos la diana dentro de la caja.
+        // Si cambia el tamaño de la ventana, recolocamos la diana dentro de la caja.
         if (enPartida) {
             moverDiana();
         }
@@ -237,7 +235,7 @@ function prepararJuego() {
         }
     });
 
-    // Conectamos la función sin ejecutarla; recibirá los eventos de resize.
+    // Conectamos la función para las siguientes rondas; comprueba enPartida.
     window.addEventListener("resize", ajustarDianaAlRedimensionar);
 }
 

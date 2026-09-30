@@ -90,8 +90,11 @@ button:focus-visible {
 /* Diana: un botón circular que JavaScript mueve con left y top. */
 #botonAim {
     position: absolute;
-    width: 60px;
-    height: 60px;
+
+    /* JavaScript obtiene el tamaño de tamanosDiana y actualiza esta variable. */
+    width: var(--tamano-diana);
+    height: var(--tamano-diana);
+
     padding: 0;
     border: 6px solid white;
     border-radius: 50%;

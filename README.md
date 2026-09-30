@@ -81,6 +81,11 @@ Las instrucciones de la página se generan desde esa configuración.
 El índice del nivel se limita al último elemento de `tamanosDiana`
 para evitar acceder a un tamaño inexistente.
 
+Los tamaños se configuran únicamente en `tamanosDiana`.
+`actualizarDificultad()` actualiza la variable CSS `--tamano-diana`,
+que se utiliza tanto para la anchura como para la altura del botón.
+El CSS no repite los valores de los niveles.
+
 ## Archivos
 
 | Archivo | Responsabilidad |
@@ -125,6 +130,9 @@ ChatGPT propuso código y explicaciones para:
 - Generar los textos de instrucciones desde la configuración.
 - Incorporar dificultad progresiva mediante distintos tamaños de diana.
 - Revisar la coherencia entre HTML, JavaScript y documentación.
+- Extraer los manejadores de clic y redimensionamiento a funciones
+  nombradas, evitar coordenadas negativas y centralizar el tamaño
+  de la diana mediante una variable CSS.
 
 También recibí ayuda para redactar este README. El apoyo de IA abarcó
 varias partes del proyecto, no únicamente la dificultad progresiva.
@@ -144,19 +152,10 @@ de la diana, recuento de aciertos y fallos, cronómetro, reinicio y
 clasificación. También confirmé el funcionamiento del cronómetro tras
 extraer su intervalo a una constante.
 
-Para la dificultad progresiva, ChatGPT ejecutó una prueba de lógica
-con DOM simulado. Esa prueba comprobó:
-
-- La secuencia de tamaños durante los diez disparos.
-- La finalización de una ronda con todos los disparos fallados.
-- La finalización de una ronda con todos los disparos acertados.
-- La colocación del resultado con mayor precisión por delante.
-- El reinicio de contadores y del tamaño de la diana.
-- Que reiniciar una ronda no añade un resultado a la clasificación.
-
-La prueba se ejecutó fuera del repositorio y no está incluida como
-archivo de test. Valida esas rutas de lógica con un DOM simulado;
-no verifica el aspecto visual ni sustituye una prueba en un navegador.
+Esta entrega no incluye archivos de pruebas automatizadas. La lista
+«Comprobaciones manuales para futuras revisiones» indica qué revisar
+en el navegador después de cada cambio; no implica que una versión
+recién modificada ya haya superado esas comprobaciones.
 
 ## Autopsia
 
@@ -234,8 +233,7 @@ gestionar los disparos desde el contenedor.
 
 - La clasificación no persiste al recargar.
 - Al redimensionar durante una ronda, la diana cambia a una posición aleatoria.
-- Las coordenadas se limitan con `Math.max(0, ...)` para evitar valores
-  negativos. Si el contenedor fuese menor que la diana, esta quedaría
-  en el origen del eje afectado, pero podría sobresalir: limitar la
-  posición no reduce su tamaño.
+- `Math.max(0, ...)` evita coordenadas negativas si el contenedor es
+  menor que la diana. Esta queda en el origen del eje afectado, pero
+  puede sobresalir: limitar la posición no reduce su tamaño.
 - El tiempo depende del reloj del sistema.
