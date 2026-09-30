@@ -89,8 +89,11 @@ function prepararJuego() {
 
     function moverDiana() {
         // Restamos el tamaño de la diana para que quepa dentro de la caja.
-        const maxX = caja.clientWidth - diana.offsetWidth;
-        const maxY = caja.clientHeight - diana.offsetHeight;
+        // Releemos las medidas porque cambian con el nivel y el tamaño de ventana.
+        // Math.max evita posiciones negativas si la caja es menor que la diana.
+        // En ese caso queda en el origen de ese eje, aunque no quepa entera.
+        const maxX = Math.max(0, caja.clientWidth - diana.offsetWidth);
+        const maxY = Math.max(0, caja.clientHeight - diana.offsetHeight);
 
         // Math.random() genera un número desde 0 hasta menos de 1.
         // Al multiplicarlo obtenemos una posición dentro del espacio disponible.
@@ -178,20 +181,7 @@ function prepararJuego() {
         actualizarClasificacion(nuevaRonda);
     }
 
-    // La configuración también determina los textos iniciales de la interfaz.
-    instrucciones.textContent =
-        `Tienes ${meta} disparos. La diana se reduce cada ${disparosPorNivel} disparos, ` +
-        `hasta ${tamanosDiana[tamanosDiana.length - 1]} px. Consigue la mayor precisión posible.`;
-
-    actualizarMarcador();
-    actualizarDificultad();
-
-    // Pasamos la función sin paréntesis para que se ejecute al hacer clic.
-    iniciar.addEventListener("click", comenzarRonda);
-
-    // Delegación: escuchamos en la caja los clics del fondo y de la diana.
-    caja.addEventListener("click", (event) => {
-
+    function registrarDisparo(event) {
         // Ignoramos los clics antes de empezar y después de terminar.
         if (!enPartida) {
             return;
@@ -216,7 +206,28 @@ function prepararJuego() {
                 moverDiana();
             }
         }
-    });
+    }
+
+    function ajustarDianaAlRedimensionar() {
+        // Si cambia la anchura de la ventana, recolocamos la diana dentro de la caja.
+        if (enPartida) {
+            moverDiana();
+        }
+    }
+
+    // La configuración también determina los textos iniciales de la interfaz.
+    instrucciones.textContent =
+        `Tienes ${meta} disparos. La diana se reduce cada ${disparosPorNivel} disparos, ` +
+        `hasta ${tamanosDiana[tamanosDiana.length - 1]} px. Consigue la mayor precisión posible.`;
+
+    actualizarMarcador();
+    actualizarDificultad();
+
+    // Pasamos la función sin paréntesis para que se ejecute al hacer clic.
+    iniciar.addEventListener("click", comenzarRonda);
+
+    // Delegación: escuchamos en la caja los clics del fondo y de la diana.
+    caja.addEventListener("click", registrarDisparo);
 
     // Bonus de la misión: cambiar de tema mediante una tecla.
     document.addEventListener("keydown", (event) => {
@@ -226,12 +237,8 @@ function prepararJuego() {
         }
     });
 
-    // Si cambia la anchura de la ventana, recolocamos la diana dentro de la caja.
-    window.addEventListener("resize", () => {
-        if (enPartida) {
-            moverDiana();
-        }
-    });
+    // Conectamos la función sin ejecutarla; recibirá los eventos de resize.
+    window.addEventListener("resize", ajustarDianaAlRedimensionar);
 }
 
 // Se ejecuta una vez para preparar las variables y conectar los eventos.

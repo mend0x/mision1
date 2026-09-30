@@ -234,6 +234,8 @@ gestionar los disparos desde el contenedor.
 
 - La clasificación no persiste al recargar.
 - Al redimensionar durante una ronda, la diana cambia a una posición aleatoria.
-- Si el contenedor fuese más pequeño que la diana, el cálculo actual
-  podría producir coordenadas negativas.
+- Las coordenadas se limitan con `Math.max(0, ...)` para evitar valores
+  negativos. Si el contenedor fuese menor que la diana, esta quedaría
+  en el origen del eje afectado, pero podría sobresalir: limitar la
+  posición no reduce su tamaño.
 - El tiempo depende del reloj del sistema.
