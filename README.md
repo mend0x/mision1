@@ -95,7 +95,7 @@ para evitar acceder a un tamaño inexistente.
 Utilicé **ChatGPT (Codex)** como apoyo durante el desarrollo y la
 revisión del proyecto.
 
-### Base propia y trabajo manual
+**Base propia y trabajo manual**
 
 Partí de una versión propia de AimSimulator que ya incluía una diana
 móvil, un contador y el cálculo de posiciones aleatorias.
@@ -113,7 +113,7 @@ Durante las revisiones fui incorporando los cambios a los archivos
 locales y registrándolos mediante commits. Pedí conservar comentarios
 didácticos para facilitar el estudio y la defensa del código.
 
-### Qué delegué a la IA
+**Qué delegué a la IA**
 
 ChatGPT propuso código y explicaciones para:
 
@@ -129,7 +129,7 @@ ChatGPT propuso código y explicaciones para:
 También recibí ayuda para redactar este README. El apoyo de IA abarcó
 varias partes del proyecto, no únicamente la dificultad progresiva.
 
-### Prompts clave
+**Prompts clave**
 
 Dos instrucciones utilizadas durante el desarrollo fueron:
 
@@ -137,7 +137,7 @@ Dos instrucciones utilizadas durante el desarrollo fueron:
 
 > Tambien vas a añadir un cronometro que temporice la ronda para que tenga sentido la leaderboard de rondas
 
-### Cómo se verificó
+**Cómo se verificó**
 
 Durante las revisiones comprobé el juego en el navegador: movimiento
 de la diana, recuento de aciertos y fallos, cronómetro, reinicio y
